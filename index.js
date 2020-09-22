@@ -1,5 +1,84 @@
-/*
 
+let characters = 
+  { "name": "Luke Skywalker",
+    "height": "172",
+    "mass": "77",
+    "hair_color": "blond",
+    "skin_color": "fair",
+    "eye_color": "blue",
+    "birth_year": "19BBY",
+    "homeworld": "Tatooine",
+    "films": [
+      "A New Hope",
+      "The Empire Strikes Back",
+      "Return of the Jedi",
+      "Revenge of the Sith",
+      "The Force Awakens"
+      ],
+    "species": [
+      "Human"
+      ],
+    "vehicles": [
+        {
+        "name": "Snowspeeder",
+        "model": "t-47 airspeeder",
+        "manufacturer": "Incom corporation",
+        "cost_in_credits": null,
+        "length": "4.5",
+        "max_atmosphering_speed": "650",
+        "crew": 2,
+        "passengers": 0,
+        "cargo_capacity": "10"
+        },
+        {
+        "name": "Imperial Speeder Bike",
+        "model": "74-Z speeder bike",
+        "manufacturer": "Aratech Repulsor Company",
+        "cost_in_credits": "8000",
+        "length": "3",
+        "max_atmosphering_speed": "360",
+        "crew": 1,
+        "passengers": 1,
+        "cargo_capacity": "4"
+        }
+      ],
+  "starships": [
+    {
+      "name": "X-wing",
+      "model": "T-65 X-wing",
+      "manufacturer": "Incom Corporation",
+      "cost_in_credits": 149999,
+      "length": "12.5",
+      "max_atmosphering_speed": "1050",
+      "crew": 1,
+      "passengers": 0,
+      "cargo_capacity": "110",
+      "consumables": "1 week",
+      "hyperdrive_rating": "1.0",
+      "MGLT": "100",
+      "starship_class": "Starfighter"
+    },
+    {
+      "name": "Imperial shuttle",
+      "model": "Lambda-class T-4a shuttle",
+      "manufacturer": "Sienar Fleet Systems",
+      "cost_in_credits": 240000,
+      "length": "20",
+      "max_atmosphering_speed": "850",
+      "crew": 6,
+      "passengers": 20,
+      "cargo_capacity": "80000",
+      "consumables": "2 months",
+      "hyperdrive_rating": "1.0",
+      "MGLT": "50",
+      "starship_class": "Armed government transport"
+    }
+  ],
+  "created": "2014-12-09T13:50:51.644000Z",
+  "edited": "2014-12-20T21:17:56.891000Z",
+  "url": "https://swapi.co/api/people/1/"
+}
+/*
 // 👇 COMPLETE YOUR WORK BELOW 👇
 // 👇 COMPLETE YOUR WORK BELOW 👇
 // 👇 COMPLETE YOUR WORK BELOW 👇
@@ -30,7 +109,7 @@ function getName(character) {
  */
 function getFilmCount(character) {
   // TODO: Add your code inside the functions (others below).
-
+  return character.films.length;
 }
 
 /**
@@ -43,6 +122,8 @@ function getFilmCount(character) {
 */
 function getSecondStarshipName(character) {
   // TODO: Add your code here.
+  if (character.starships.length === 0) return `none`;
+  else return character.starships[1].name;
 }
 
 /**
@@ -56,6 +137,7 @@ function getSecondStarshipName(character) {
  */
 function getSummary(character) {
   // TODO: Add your code here.
+  return `${character.name}, ${character.height}cm, ${character.mass}kg. Featured in ${character.films.length} films.`
 }
 
 /**
@@ -68,8 +150,11 @@ function getSummary(character) {
 */
 function getVehiclesCostInCreditsSumTotal(character) {
   // TODO: Add your code here.
+  return character.vehicles.reduce((sum, currValue) => {
+    if (currValue.cost_in_credits) sum += currValue.cost_in_credits;
+    return sum;
+  }, 0);
 }
-
 /**
  * ### Challenge `getStarshipPassengerAndCrewSumTotal`
  * MVP Challenge 🤓
@@ -82,6 +167,10 @@ function getVehiclesCostInCreditsSumTotal(character) {
 */
 function getStarshipPassengerAndCrewSumTotal(character) {
   // TODO: Add your code here.
+  return character.starships.reduce((sum, currValue) => {
+    sum += currValue.crew + currValue.passengers;
+    return sum;
+  }, 0);
 }
 
 /**
@@ -99,6 +188,10 @@ function getStarshipPassengerAndCrewSumTotal(character) {
 */
 function getNthFilm(character, filmNumber) {
   // TODO: Add your code here.
+  if (filmNumber < 1 || filmNumber > 3) {
+    return `Error: No films found. Try "Hansel & Gretel: Witch Hunters" instead.`
+  }
+  else return character.films[filmNumber-1];
 }
 
 /**
@@ -113,7 +206,18 @@ function getNthFilm(character, filmNumber) {
 */
 function getCargoCapacityTotal(character) {
   // TODO: Add your code here.
+  let sumCargo = character.vehicles.reduce((sum, currValue) => {
+    sum += Number(currValue.cargo_capacity);
+    return sum;
+  }, 0);
+  sumCargo += character.starships.reduce((sum, currValue) => {
+    sum += Number(currValue.cargo_capacity);
+    return sum;
+  }, 0);
+  return sumCargo;
 }
+
+
 
 /**
  * ### Challenge `getFastestStarshipName`
@@ -128,6 +232,18 @@ function getCargoCapacityTotal(character) {
 */
 function getFastestStarshipName(character) {
   // TODO: Add your code here.
+  let slowestName = "";
+  let slowestSpeed = 0;
+  if (character.starships.length > 0) {
+    character.starships.forEach(ship => {
+      if (Number(ship.max_atmosphering_speed) > slowestSpeed) {
+        slowestName = ship.name;
+        slowestSpeed = ship.max_atmosphering_speed;
+      };
+    });
+    return slowestName;
+  }
+  else return `none`;
 }
 
 /**
@@ -143,6 +259,19 @@ function getFastestStarshipName(character) {
 */
 function getLargestCargoStarshipModelName(character) {
   // TODO: Add your code here.
+  let slowestName = "";
+  let slowestSpeed = 0;
+  if (character.starships.length > 0) {
+    character.starships.forEach(ship => {
+      if (Number(ship.cargo_capacity) > slowestSpeed) {
+        slowestName = ship.model;
+        slowestSpeed = ship.cargo_capacity;
+      };
+    });
+    return slowestName;
+  }
+  else return `none`;
+
 }
 
 /**
@@ -155,10 +284,37 @@ function getLargestCargoStarshipModelName(character) {
  * If the character does not have any starships or vehicles, then return string 'none'.
  *
 */
+
 function getSlowestVehicleOrStarshipName(character) {
   // TODO: Add your code here.
+  let slowestName;
+  let slowestSpeed;
+  if (character.starships.length > 0) {
+    character.starships.forEach(ship => {
+      if (!slowestSpeed) {
+        slowestSpeed = ship.max_atmosphering_speed;
+        slowestName = ship.name;
+      }
+      if (Number(ship.max_atmosphering_speed) < slowestSpeed) {
+        slowestName = ship.name;
+        slowestSpeed = ship.max_atmosphering_speed;
+      };
+    });
+  }
+  if (character.vehicles.length > 0) {
+    character.vehicles.forEach(vehicle => {
+      if (!slowestSpeed) {
+        slowestSpeed = vehicle.max_atmosphering_speed;
+        slowestName = vehicle.name;
+      }
+      if (Number(vehicle.max_atmosphering_speed) < slowestSpeed) {
+        slowestName = vehicle.name;
+        slowestSpeed = vehicle.max_atmosphering_speed;
+      };
+    });
+  }
+  return slowestName;
 }
-
 
 
 
